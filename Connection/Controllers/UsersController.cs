@@ -93,7 +93,6 @@ namespace FamsGames.Controllers
             {
                 return BadRequest();
             }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -102,10 +101,11 @@ namespace FamsGames.Controllers
             var updated = await famsGamesRepository.UpdateUser(user);
             return Created("Actualizado!", updated);
         }
-        [HttpPut("Score/{iduser},{idgame},{puntos}")]
-        public async Task<IActionResult> UpdateScore(int iduser, int idgame, int puntos)
+        /// ===================================================
+        [HttpPut("Score/{id}")]
+        public async Task<IActionResult> UpdateScore([FromBody] Score score)
         {
-            if (iduser == null)
+            if (score.IdGame == null || score.IdUser == null)
             {
                 return BadRequest();
             }
@@ -115,10 +115,10 @@ namespace FamsGames.Controllers
                 return BadRequest(ModelState);
             }
 
-            var updated = await famsGamesRepository.UpdateScore(iduser, idgame, puntos);
+            var updated = await famsGamesRepository.UpdateScore(score);
             return Created("Actualizado!", updated);
         }
-
+        /// ==================================================
         [HttpDelete("User {id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

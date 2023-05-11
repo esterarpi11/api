@@ -100,23 +100,23 @@ namespace FamsGames.Repositories
             var result = await db.ExecuteAsync(sql, new { IdGame=score.IdGame, IdUser=score.IdUser, Points = score.Points, Tries = score.Tries});
             return result > 0;
         }
-
-        public async Task<bool> UpdateScore(int point, int tries, int game, int user)
+        ///
+        public async Task<bool> UpdateScore(Score score)
         {
             var db = dbConnection();
 
             var sql = @"
                         UPDATE famsgames.score
                         SET
-                            points  = @Points,
-                            tries = @Tries
-                        WHERE idgame = @IdGame AND iduser = @IdUser;
+                            points = points + @Points,
+                            tries = tries + 1
+                        WHERE idgame = @IdGame AND iduser = @IdUser
                         ";
 
-            var result = await db.ExecuteAsync(sql, new { Points=point, Tries=tries, IdGame=game, IdUser=user });
+            var result = await db.ExecuteAsync(sql, new { IdUser = score.IdUser, IdGame = score.IdGame, Points = score.Points});
             return result > 0;
         }
-
+        ///
         public async Task<bool> UpdateUser(User user)
         {
             var db = dbConnection();
@@ -131,23 +131,7 @@ namespace FamsGames.Repositories
                         WHERE iduser = @Iduser;
                         ";
 
-            var result = await db.ExecuteAsync(sql, new { user.Name, user.Surname, user.Nickname,  user.Password, user.Location, user.IdUser });
-            return result > 0;
-        }
-
-        public async Task<bool> UpdateScore(int point, int game, int user)
-        {
-            var db = dbConnection();
-
-            var sql = @"
-                        UPDATE famsgames.score
-                        SET
-                            points  = @Points,
-                            tries = tries + 1,
-                        WHERE idgame = @IdGame AND iduser = @IdUser;
-                        ";
-
-            var result = await db.ExecuteAsync(sql, new { Points = point, IdGame = game, IdUser = user });
+            var result = await db.ExecuteAsync(sql, new { user.Name, user.Surname, user.Nickname,  user.Password, user.Location, user.IdUser});
             return result > 0;
         }
 
